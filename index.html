@@ -1,0 +1,450 @@
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Happy Birthday Moiz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&display=swap" rel="stylesheet">
+<style>
+  /*
+    Layout concept: a single scrolling "terminal session" — a dark IDE-like
+    canvas where the page boots like a script, prints a birthday message
+    line by line, then "renders" a warm, human card underneath, closing
+    with a monospaced birthday_wish.py block as the signed note.
+  */
+  :root{
+    --bg: #0d1117;
+    --bg-raised: #131a23;
+    --ink: #e6edf3;
+    --ink-dim: #8b96a5;
+    --rule: #22303f;
+    --py-blue: #4b8bbe;
+    --py-yellow: #ffd43b;
+    --good: #7ee787;
+    --display: 'Fraunces', Georgia, 'Times New Roman', serif;
+    --mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Consolas, monospace;
+    color-scheme: dark;
+  }
+
+  *{box-sizing:border-box}
+  html,body{background:var(--bg)}
+  body{
+    margin:0;
+    font-family: var(--mono);
+    color: var(--ink);
+    background: var(--bg);
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    overflow-x: hidden;
+  }
+
+  a{color:var(--py-yellow)}
+
+  #confetti{
+    position:fixed; inset:0; width:100%; height:100%;
+    pointer-events:none; z-index:50;
+  }
+
+  .wrap{
+    max-width: 720px;
+    margin: 0 auto;
+    padding-block: 48px 72px;
+  }
+
+  /* ---- terminal boot ---- */
+  .term{
+    background: var(--bg-raised);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 30px 60px -30px rgba(0,0,0,.6);
+  }
+  .term-bar{
+    display:flex; align-items:center; gap:8px;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .dot{width:10px;height:10px;border-radius:50%}
+  .dot.r{background:#ff5f57}
+  .dot.y{background:#febc2e}
+  .dot.g{background:#28c840}
+  .term-title{
+    margin-left: 8px;
+    font-size: 12px;
+    color: var(--ink-dim);
+    letter-spacing: .02em;
+  }
+  .term-body{
+    padding: 20px 18px 24px;
+    font-size: 13.5px;
+    line-height: 1.75;
+    min-height: 168px;
+  }
+  .term-body .ln{color:var(--ink-dim)}
+  .term-body .kw{color:#ff7b72}
+  .term-body .str{color:var(--good)}
+  .term-body .fn{color:#d2a8ff}
+  .cursor{
+    display:inline-block; width:8px; height:1em; background:var(--py-yellow);
+    vertical-align:text-bottom; margin-left:2px;
+    animation: blink 1s steps(1) infinite;
+  }
+  @media (prefers-reduced-motion: reduce){ .cursor{animation:none} }
+  @keyframes blink{ 50%{opacity:0} }
+
+  /* ---- hero ---- */
+  .hero{
+    text-align:center;
+    padding-block: 44px 8px;
+  }
+  .eyebrow{
+    font-size: 12px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--py-blue);
+    margin: 0 0 14px;
+  }
+  h1{
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: clamp(34px, 7vw, 58px);
+    line-height: 1.04;
+    margin: 0 0 16px;
+    text-wrap: balance;
+  }
+  h1 span{color: var(--py-yellow)}
+  .sub{
+    font-family: var(--mono);
+    color: var(--ink-dim);
+    font-size: 15px;
+    max-width: 46ch;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  /* ---- snake divider ---- */
+  .snake-row{
+    display:flex; justify-content:center;
+    padding-block: 28px 8px;
+  }
+  .snake-row svg{display:block}
+
+  /* ---- message card ---- */
+  .card{
+    background: var(--bg-raised);
+    border: 1px solid var(--rule);
+    border-radius: 14px;
+    padding: 32px clamp(18px, 5vw, 40px);
+    margin-top: 28px;
+  }
+  .card h2{
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 24px;
+    margin: 0 0 14px;
+    color: var(--ink);
+  }
+  .card p{
+    font-family: Georgia, 'Fraunces', serif;
+    font-size: 16.5px;
+    line-height: 1.8;
+    color: var(--ink);
+    margin: 0 0 14px;
+    max-width: 62ch;
+  }
+  .card p:last-child{margin-bottom:0}
+  .sign{
+    margin-top: 22px;
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--ink-dim);
+  }
+
+  /* ---- stat strip ---- */
+  .strip{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 28px;
+  }
+  .stat{
+    background: var(--bg-raised);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    padding: 16px 14px;
+    min-width: 0;
+  }
+  .stat .num{
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 22px;
+    color: var(--py-yellow);
+  }
+  .stat .lbl{
+    font-size: 11px;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+    margin-top: 4px;
+  }
+  @media (max-width: 480px){
+    .strip{grid-template-columns: 1fr 1fr}
+    .stat:last-child{grid-column: 1 / -1}
+  }
+
+  /* ---- code wish ---- */
+  .code-card{
+    margin-top: 28px;
+    background: var(--bg-raised);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .code-head{
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--rule);
+    font-size: 12px;
+    color: var(--ink-dim);
+    display:flex; justify-content:space-between; align-items:center;
+    gap: 10px;
+  }
+  pre.code{
+    margin: 0;
+    padding: 18px 16px 20px;
+    font-size: 13px;
+    line-height: 1.8;
+    overflow-x: auto;
+    color: var(--ink);
+  }
+  pre.code .c{color:var(--ink-dim)}
+  pre.code .k{color:#ff7b72}
+  pre.code .s{color:var(--good)}
+  pre.code .n{color:var(--py-yellow)}
+  pre.code .f{color:#d2a8ff}
+
+  .copy-btn{
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--ink);
+    background: var(--bg);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 6px 10px;
+    cursor: pointer;
+  }
+  .copy-btn:hover{border-color: var(--py-blue)}
+  .copy-btn:focus-visible, .copy-btn:focus{outline: 2px solid var(--py-yellow); outline-offset: 2px}
+
+  footer{
+    text-align:center;
+    margin-top: 40px;
+    font-size: 12px;
+    color: var(--ink-dim);
+  }
+  footer .heart{color:#ff7b72}
+</style>
+
+<canvas id="confetti"></canvas>
+
+<div class="wrap">
+
+  <div class="term">
+    <div class="term-bar">
+      <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+      <span class="term-title">birthday.py &mdash; zsh</span>
+    </div>
+    <div class="term-body">
+      <div class="ln">$ python3 birthday.py --for moiz</div>
+      <div id="boot"></div>
+    </div>
+  </div>
+
+  <section class="hero">
+    <p class="eyebrow">Running on Python &middot; Oct 11</p>
+    <h1>Happy Birthday,<br><span>Moiz&nbsp;bhai</span></h1>
+    <p class="sub">Belated, I know &mdash; consider this the retry after a failed cron job. Deploying your birthday wish a few days late, but with full confidence.</p>
+  </section>
+
+  <div class="snake-row">
+    <svg width="220" height="40" viewBox="0 0 220 40" fill="none" xmlns="http://www.w3.org/2000/svg" role="presentation" aria-hidden="true">
+      <path d="M4 20c10-14 26-14 36 0s26 14 36 0 26-14 36 0 26 14 36 0 26-14 36 0 26 14 32 0" stroke="#4b8bbe" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="4" cy="20" r="4" fill="#ffd43b"/>
+      <circle cx="216" cy="20" r="4" fill="#ffd43b"/>
+    </svg>
+  </div>
+
+  <section class="card">
+    <h2>A quick traceback</h2>
+    <p>Teri birthday 11 ko thi aur main bhool gaya &mdash; classic off-by-one error on my part. Lekin tu jaanta hai, har jagah jahan maine code mein atak ke sar khujaya hai, tu wahin se nikal ke rasta dikhata hai. Oracle ho ya kuch aur confusing stack trace, tera patience aur explanation har baar kaam aata hai.</p>
+    <p>Aapne jo guidance di hai, jo waqt diya hai, uske liye seriously bohat shukriya. Hope tera year ahead utna hi smooth chale jitna tera well-structured code hota hai &mdash; kam bugs, zyada wins.</p>
+    <div class="sign">&mdash; Andy</div>
+  </section>
+
+  <div class="strip">
+    <div class="stat">
+      <div class="num">3 din</div>
+      <div class="lbl">late, not forgotten</div>
+    </div>
+    <div class="stat">
+      <div class="num">∞</div>
+      <div class="lbl">patience with juniors</div>
+    </div>
+    <div class="stat">
+      <div class="num">1</div>
+      <div class="lbl">excellent senior</div>
+    </div>
+  </div>
+
+  <div class="code-card">
+    <div class="code-head">
+      <span>birthday_wish.py</span>
+      <button class="copy-btn" id="copyBtn" type="button">Copy</button>
+    </div>
+    <pre class="code" id="codeBlock"><span class="c"># a late deploy, but it ships</span>
+<span class="k">def</span> <span class="f">wish_happy_birthday</span>(name<span class="c">=</span><span class="s">"Moiz"</span>):
+    message <span class="c">=</span> <span class="s">f"Happy Birthday, {name} bhai!"</span>
+    thanks <span class="c">=</span> <span class="s">"for every bug you've helped me fix"</span>
+    <span class="k">return</span> <span class="n">f"{message} Thank you {thanks}."</span>
+
+<span class="k">if</span> __name__ <span class="c">==</span> <span class="s">"__main__"</span>:
+    <span class="f">print</span>(<span class="f">wish_happy_birthday</span>())
+    <span class="c"># &gt;&gt;&gt; Happy Birthday, Moiz bhai! Thank you for every bug you've helped me fix.</span></pre>
+  </div>
+
+  <footer>
+    built with <span class="heart">&hearts;</span> by Andy, a few commits behind schedule
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  // ---- terminal boot sequence ----
+  var bootEl = document.getElementById('boot');
+  var lines = [
+    '<span class="kw">import</span> <span class="fn">wishes</span>',
+    '<span class="ln">loading moiz_profile.json ... ok</span>',
+    '<span class="str">&gt;&gt;&gt; Happy Birthday, Moiz! 🎉</span>'
+  ];
+  var li = 0;
+
+  function typeLine(){
+    if (li >= lines.length) return;
+    var div = document.createElement('div');
+    bootEl.appendChild(div);
+    var raw = lines[li];
+    // reveal as plain text first for the typing feel, then swap to styled html
+    var plain = raw.replace(/<[^>]*>/g, '');
+    var i = 0;
+    var iv = setInterval(function(){
+      i++;
+      div.textContent = plain.slice(0, i);
+      if (i >= plain.length){
+        clearInterval(iv);
+        div.innerHTML = raw;
+        li++;
+        setTimeout(typeLine, 260);
+      }
+    }, 22);
+  }
+
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    bootEl.innerHTML = lines.join('<br>');
+  } else {
+    typeLine();
+  }
+
+  // ---- copy button ----
+  var copyBtn = document.getElementById('copyBtn');
+  var codeBlock = document.getElementById('codeBlock');
+  if (copyBtn){
+    copyBtn.addEventListener('click', function(){
+      var text = codeBlock.textContent;
+      function done(){
+        var original = copyBtn.textContent;
+        copyBtn.textContent = 'Copied';
+        setTimeout(function(){ copyBtn.textContent = original; }, 1400);
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).then(done).catch(function(){
+          fallbackCopy(text, done);
+        });
+      } else {
+        fallbackCopy(text, done);
+      }
+    });
+  }
+  function fallbackCopy(text, cb){
+    try{
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.focus(); ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      cb();
+    }catch(e){}
+  }
+
+  // ---- confetti burst on load ----
+  var canvas = document.getElementById('confetti');
+  var ctx = canvas.getContext('2d');
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function resize(){
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  if (!reduceMotion){
+    var colors = ['#4b8bbe', '#ffd43b', '#7ee787', '#ff7b72', '#d2a8ff'];
+    var pieces = [];
+    var count = Math.min(140, Math.floor(window.innerWidth / 6));
+    for (var p = 0; p < count; p++){
+      pieces.push({
+        x: Math.random() * canvas.width,
+        y: -20 - Math.random() * canvas.height * 0.5,
+        w: 5 + Math.random() * 5,
+        h: 8 + Math.random() * 6,
+        rot: Math.random() * Math.PI,
+        vrot: (Math.random() - 0.5) * 0.2,
+        vy: 1.5 + Math.random() * 2.2,
+        vx: (Math.random() - 0.5) * 1.4,
+        color: colors[Math.floor(Math.random() * colors.length)]
+      });
+    }
+    var start = null;
+    var duration = 4200;
+
+    function frame(ts){
+      if (!start) start = ts;
+      var elapsed = ts - start;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      var alive = false;
+      for (var i = 0; i < pieces.length; i++){
+        var piece = pieces[i];
+        piece.x += piece.vx;
+        piece.y += piece.vy;
+        piece.rot += piece.vrot;
+        if (piece.y < canvas.height + 30) alive = true;
+        ctx.save();
+        ctx.translate(piece.x, piece.y);
+        ctx.rotate(piece.rot);
+        ctx.fillStyle = piece.color;
+        ctx.fillRect(-piece.w / 2, -piece.h / 2, piece.w, piece.h);
+        ctx.restore();
+      }
+      if (elapsed < duration && alive){
+        requestAnimationFrame(frame);
+      } else {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+    }
+    requestAnimationFrame(frame);
+  }
+})();
+</script>
