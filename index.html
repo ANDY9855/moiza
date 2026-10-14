@@ -1,4 +1,8 @@
-<meta name="claude:viewport-fit-sides" content="cover">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Happy Birthday Moiz</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -188,6 +192,11 @@
   @media (max-width: 480px){
     .strip{grid-template-columns: 1fr 1fr}
     .stat:last-child{grid-column: 1 / -1}
+    .wrap{padding-block: 32px 56px}
+    .card{padding: 26px clamp(16px, 5vw, 28px)}
+    .card p{font-size: 15.5px}
+    pre.code{font-size: 12px}
+    .sub{font-size: 14px}
   }
 
   /* ---- code wish ---- */
@@ -241,6 +250,8 @@
   }
   footer .heart{color:#ff7b72}
 </style>
+</head>
+<body>
 
 <canvas id="confetti"></canvas>
 
@@ -448,3 +459,5 @@
   }
 })();
 </script>
+</body>
+</html>
